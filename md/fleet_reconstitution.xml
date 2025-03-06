@@ -1,33 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <diff>
-  <add sel="/mdscript/cues/cue/cues/cue[@name='ProcessRequest']/actions/do_if[@value='$shipstobereplaced.count']/do_for_each/do_else/do_for_each/do_else" pos="after">
-    <debug_text text="'Fleet_Reconstitution: Processing ShipYard %s, can build %s, fails: %s, loadout: %s, count: %s, count: %s'.[$locshipyard.debugname, @$canbuildmacro, @$shipyardfails, $locship.loadout, $locship.loadout.count, $locship.loadout.warelist.count]" chance="100" />
+  <remove sel="//include_actions" />
+  <add sel="//do_if[@value='$shipstobereplaced.count']/do_for_each" pos="before">
+    <include_actions ref="FindClosestShipyardsForReconstitution" />
   </add>
-  <add sel="/mdscript/cues/cue/cues/cue[@name='ProcessRequest']/actions/do_if[@value='$shipstobereplaced.count']/do_for_each/do_else/do_for_each/set_value[@name='$missingequipment']" pos="after">
-    <debug_text text="'Fleet_Reconstitution: ShipYard: %s, Missing equipment count: %s, best missing equipment: %s'.[$locshipyard.debugname, $missingequipment.count, $bestmissingequipment.count]" chance="100" />
-  </add>
-  <add sel="/mdscript/cues/cue/cues/cue[@name='ProcessRequest']/actions/do_if[@value='$shipstobereplaced.count']/do_for_each/do_else/do_for_each/do_if[@value='$missingequipment.count gt 0 and ($shipyard_i == 1 or $missingequipment.count lt $bestmissingequipment.count)']" pos="prepend">
-    <debug_text text="'Fleet_Reconstitution: On shipyard %s, missing equipment: %s'.[$locshipyard.debugname, $missingequipment.count]" chance="100" />
-    <do_for_each name="$equipment" in="$missingequipment" counter="$equipment_i">
-      <debug_text text="'Fleet_Reconstitution: Missing equipment %s: %s (%s)'.[$equipment_i, $equipment.name, $equipment.id]" chance="100" />
-    </do_for_each>
-  </add>
-  <add sel="/mdscript/cues/cue/cues/cue[@name='ProcessRequest']/actions/do_if[@value='$shipstobereplaced.count']/do_for_each/do_else/do_for_each/do_if[@value='$missingequipment.count gt 0 and ($shipyard_i == 1 or $missingequipment.count lt $bestmissingequipment.count)']" pos="after">
-    <do_else>
-      <set_value name="$shipyardWares" exact="$locshipyard.resources" />
-      <set_value name="$shipLoadout" exact="$locship.loadout.wares" />
-      <debug_text text="'Fleet_Reconstitution: Needed loadout items count for %s: %s'.[$locship.macro, $shipLoadout.count]" chance="100" />
-      <do_for_each in="$shipLoadout.table" name="$shipLoadoutItem">
-        <debug_text text="'Fleet_Reconstitution: Loadout ware: %s, Amount: %s'.[$shipLoadoutItem, $shipLoadout.table.{$shipLoadoutItem}]" chance="100" />
-      </do_for_each>
-    </do_else>
-  </add>
-  <add sel="/mdscript/cues/cue/cues/cue[@name='ProcessRequest']/actions/do_if[@value='$shipstobereplaced.count']/do_for_each/do_else/do_for_each/do_if[@value='not $shipyardfails']" pos="prepend">
-    <debug_text text="'Fleet_Reconstitution: Going to build %s %s'.[$locship.macro.class, $locship.macro]" chance="100" />
-  </add>
-  <add sel="/mdscript/cues/cue/cues/cue[@name='ProcessRequest']/actions/do_if[@value='$shipstobereplaced.count']/do_for_each/do_else/do_if/do_if[@value='$bestmissingequipment.count']" pos="prepend">
-    <do_for_each name="$equipment" in="$missingequipment" counter="$equipment_i">
-      <debug_text text="'Fleet_Reconstitution: Best missing equipment %s: %s (%s)'.[$equipment_i, $equipment.name, $equipment.id]" chance="100" />
-    </do_for_each>
+  <remove sel="//do_if[@value='$locshipyard.canbuildmacro.{$locship.macro}']" />
+  <remove sel="//do_if[@value='$shipstobereplaced.count']/do_for_each/do_else/do_for_each/do_else" />
+  <add sel="//set_value[@name='$missingequipment']" pos="before">
+    <include_actions ref="PreFilterShipyardForReconstitution" />
   </add>
 </diff>

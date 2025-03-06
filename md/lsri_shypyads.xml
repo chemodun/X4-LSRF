@@ -116,20 +116,52 @@
       </actions>
     </library>
 
-     <cue name="ShipyardMainMenuHandler" instantiate="true" >
-        <conditions>
-          <check_any>
-            <event_conversation_started convprefix="LSRI_" />
-            <event_conversation_next_section sectionprefix="LSRI_" />
-            <event_conversation_returned_to_section sectionprefix="LSRI_" />
-          </check_any>
-        </conditions>
-        <actions>
-          <set_value name="$actor" exact="player.conversationactor" />
-          <debug_text text="'LSRI ShipyardMainMenuHandler: SY: %s, Actor: %s. Event: %s'.[$actor.assignedcontrolled, $actor.debugname, event.name]" chance="100"/>
-          <include_actions ref="ShipyardsConfigurationMenu" />
-        </actions>
-      </cue>
+    <cue name="ShipyardMainMenuHandler" instantiate="true" >
+      <conditions>
+        <check_any>
+          <event_conversation_started convprefix="LSRI_" />
+          <event_conversation_next_section sectionprefix="LSRI_" />
+          <event_conversation_returned_to_section sectionprefix="LSRI_" />
+        </check_any>
+      </conditions>
+      <actions>
+        <set_value name="$actor" exact="player.conversationactor" />
+        <debug_text text="'LSRI ShipyardMainMenuHandler: SY: %s, Actor: %s. Event: %s'.[$actor.assignedcontrolled, $actor.debugname, event.name]" chance="100"/>
+        <include_actions ref="ShipyardsConfigurationMenu" />
+      </actions>
+    </cue>
+
+    <library name="FindClosestShipyardsForReconstitution">
+      <actions>
+        <find_station_by_true_owner name="$shipyards" canbuildships="true" faction="$commander.owner" hascontrolentity="controlpost.shiptrader" space="player.galaxy" multiple="true" sortbydistanceto="$commander"/>
+        <debug_text text="'LSRI FindClosestShipyardForReconstitution: Shipyards: %s, Commander: %s'.[$shipyards, $commander.debugname]" chance="100"/>
+      </actions>
+    </library>
+
+    <library name="PreFilterShipyardForReconstitution">
+      <actions>
+        <debug_text text="'LSRI PreFilterShipyardForReconstitution: Ship Macro: %s, Shipyard: %s'.[$locship.macro, $locshipyard]" chance="100"/>
+        <set_value name="$shipyardId" exact="$locshipyard.idcode" />
+        <set_value name="$shipClasses" exact="[class.ship_s, class.ship_m, class.ship_l, class.ship_xl]" />
+        <set_value name="$shipClassIndex" exact="$shipClasses.indexof.{$locship.macro.class}" />
+        <include_actions ref="md.LSRI_Shipyards.GetShipyardConfig" />
+        <do_if value ="@$shipyardConfig.$state.{$shipClassIndex}">
+          <do_if value="$locshipyard.canbuildmacro.{$locship.macro}">
+            <set_value name="$canbuildmacro" exact="true"/>
+          </do_if>
+          <do_else>
+            <set_value name="$shipyardfails" exact="true"/>
+          </do_else>
+        </do_if>
+        <do_else>
+          <debug_text text="'LSRI PreFilterShipyardForReconstitution: This ship class %s is disabled on %s.'[$locship.macro.class, $locshipyard.debugname]" />
+          <set_value name="$shipyardfails" exact="true"/>
+        </do_else>
+        <debug_text text="'LSRI PreFilterShipyardForReconstitution: Shipyard: %s, Fails: %s, Can build: %s'.[$locshipyard.debugname, $shipyardfails, $canbuildmacro]" />
+        <remove_value name="$shipyardId" />
+        <remove_value name="$shipClasses" />
+      </actions>
+    </library>
 
   </cues>
 </mdscript>
