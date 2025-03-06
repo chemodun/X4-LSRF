@@ -1,12 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <diff>
-  <remove sel="//include_actions" />
-  <add sel="//do_if[@value='$shipstobereplaced.count']/do_for_each" pos="before">
-    <include_actions ref="FindClosestShipyardsForReconstitution" />
-  </add>
+  <replace sel="//include_actions/@ref">md.LSRF_Shipyards.FindClosestShipyardsForReconstitution</replace>
   <remove sel="//do_if[@value='$locshipyard.canbuildmacro.{$locship.macro}']" />
   <remove sel="//do_if[@value='$shipstobereplaced.count']/do_for_each/do_else/do_for_each/do_else" />
   <add sel="//set_value[@name='$missingequipment']" pos="before">
-    <include_actions ref="PreFilterShipyardForReconstitution" />
+    <include_actions ref="md.LSRF_Shipyards.PreFilterShipyardForReconstitution" />
   </add>
 </diff>
