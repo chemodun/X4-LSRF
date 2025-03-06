@@ -24,44 +24,22 @@
           <find_station_by_true_owner name="$shipyards" canbuildships="true" faction="faction.player" hascontrolentity="controlpost.shiptrader" space="player.galaxy" multiple="true" sortbydistanceto="$shipyardPrimary"/>
           <set_value name="$shipyardIndex" exact="0"/>
           <do_if value="@$shipyards and @$shipyards.count > 0">
-            <do_for_each name="$shipyard" in="$shipyards" counter="$shipyardI">
-              <do_if value="$shipyard.idcode == $shipyardId">
-                <set_value name="$shipyardIndex" exact="$shipyardI"/>
-                <break/>
-              </do_if>
-            </do_for_each>
+            <set_value name="$shipyardIndex" exact="$shipyards.indexof.{$shipyardCurrent}"/>
           </do_if>
           <debug_text text="'LSRI ShipyardMenuMain: ShipyardIndex: %s. Shipyards: Count:%s, Value: %s'.[$shipyardIndex, $shipyards.count, $shipyards]" chance="100"/>
+          <set_value name="$shipClasses" exact="[class.ship_s, class.ship_m, class.ship_l, class.ship_xl]" />
+          <set_value name="$shipClassIds" exact="[{1001,51}, {1001, 50}, {1001, 49}, {1001, 48}]" />
           <include_actions ref="GetShipyardConfig" />
           <include_actions ref="UpdateShipyardConfig" />
           <debug_text text="'LSRI ShipyardMenuMain: Shipyard: %s, Config: %s'.[$shipyardCurrent.debugname, $shipyardConfig]" chance="100"/>
           <add_player_choice text="'%s: %s (%s)'.[{1001,92}, $shipyardCurrent.name, $shipyardCurrent.idcode]" position="top_left" section="LSRI_main" choiceparam="[0, 0, $shipyardCurrent, '', [], false]" comment="Current Shipyard" selectable="false"/>
-          <do_if value="$shipyardConfig.$s == true">
-            <add_player_choice text="'%s %s %s: %s'.[{1001,7833}, {1001,51}, {1001,6}, {1001,2617}]" position="left" section="LSRI_main" choiceparam="[0, 0, @$shipyardCurrent, 'S', [], false]" comment="Build S-ships" />
-          </do_if>
-          <do_else>
-            <add_player_choice text="'%s %s %s: %s'.[{1001,7833}, {1001,51}, {1001,6}, {1001,2618}]" position="left" section="LSRI_main" choiceparam="[0, 0, @$shipyardCurrent, 'S', [], true]" comment="Build S-ships" />
-          </do_else>
-          <do_if value="$shipyardConfig.$m == true">
-            <add_player_choice text="'%s %s %s: %s'.[{1001,7833}, {1001,50}, {1001,6}, {1001,2617}]" position="bottom_left" section="LSRI_main" choiceparam="[0, 0, @$shipyardCurrent, 'M', [], false]" comment="Build M-ships" />
-          </do_if>
-          <do_else>
-            <add_player_choice text="'%s %s %s: %s'.[{1001,7833}, {1001,50}, {1001,6}, {1001,2618}]" position="bottom_left" section="LSRI_main" choiceparam="[0, 0, @$shipyardCurrent, 'M', [], true]" comment="Build M-ships" />
-          </do_else>
-          <do_if value="$shipyardConfig.$l == true">
-            <add_player_choice text="'%s %s %s: %s'.[{1001,7833}, {1001,49}, {1001,6}, {1001,2617}]" position="top_right" section="LSRI_main" choiceparam="[0, 0, @$shipyardCurrent, 'L', [], false]" comment="Build L-ships" />
-          </do_if>
-          <do_else>
-            <add_player_choice text="'%s %s %s: %s'.[{1001,7833}, {1001,49}, {1001,6}, {1001,2618}]" position="top_right" section="LSRI_main" choiceparam="[0, 0, @$shipyardCurrent, 'L', [], true]" comment="Build L-ships" />
-          </do_else>
-          <do_if value="$shipyardConfig.$xl == true">
-            <add_player_choice text="'%s %s %s: %s'.[{1001,7833}, {1001,48}, {1001,6}, {1001,2617}]" position="right" section="LSRI_main" choiceparam="[0, 0, @$shipyardCurrent, 'XL', [], false]" comment="Build XL-ships" />
-          </do_if>
-          <do_else>
-            <add_player_choice text="'%s %s %s: %s'.[{1001,7833}, {1001,48}, {1001,6}, {1001,2618}]" position="right" section="LSRI_main" choiceparam="[0, 0, @$shipyardCurrent, 'XL', [], true]" comment="Build XL-ships" />
-          </do_else>
+          <do_for_each name="$shipClass" in="$shipClasses" counter="$i">
+            <set_value name="$status" exact="if $shipyardConfig.$state.{$i} then {1001,12642} else {1001, 12641}"/>
+            <set_value name="$position" exact="$i + 1"/>
+            <add_player_choice text="'%s %s-%s: %s'.[{1001,7833}, $shipClassIds.{$i}, {1001,6}, $status]" position="$position" section="LSRI_main" choiceparam="[0, 0, @$shipyardCurrent, $shipClass, [], not $shipyardConfig.$state.{$i}]" comment="Build Ships" selectable="$shipyardCurrent.canbuildclass.{$shipClass}"/>
+          </do_for_each>
           <do_if value="$shipyardIndex > 0 and $shipyardIndex le @$shipyards.count">
-            <set_value name="$shipyardIndex" exact="$shipyardIndex + 1"/>
+            <set_value name="$shipyardIndex" operation="add"/>
             <do_if value="$shipyardIndex gt @$shipyards.count">
               <set_value name="$shipyardIndex" exact="1"/>
             </do_if>
@@ -77,6 +55,11 @@
           <debug_text text="'LSRI ShipyardMenu Pressed: SY: %s, Config: %s. Event: Name: %s, Param: %s, Param2: %s'.[$shipyardCurrent.debugname, $shipyardConfig, event.name, event.param, event.param2]" chance="100"/>
           <add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back"/>
         </do_else>
+        <remove_value name="$shipClass"/>
+        <remove_value name="$shipClasses"/>
+        <remove_value name="$status"/>
+        <remove_value name="$position"/>
+        <remove_value name="$i"/>
         <remove_value name="$shipyardIndex"/>
         <remove_value name="$shipyard"/>
         <remove_value name="$shipyardI"/>
@@ -105,7 +88,7 @@
         </do_for_each>
         <debug_text text="'LSRI ShipyardConfig: For Id: %s found Config: %s'.[$shipyardId, @$shipyardConfig]" chance="100"/>
         <do_if value="@$shipyardConfig" negate="true">
-          <set_value name="$shipyardConfig" exact="table[$id = $shipyardId, $s = true, $m = true, $l = true, $xl = true]"/>
+          <set_value name="$shipyardConfig" exact="table[$id = $shipyardId, $state = [true, true, true, true]]"/>
           <append_to_list name="$shipyardsList" exact="$shipyardConfig"/>
           <set_value name="player.entity.$LSRIShipyards" exact="$shipyardsList"/>
           <debug_text text="'LSRI ShipyardConfig: For Id: %s created Config: %s'.[$shipyardId, $shipyardConfig]" chance="100"/>
@@ -123,19 +106,12 @@
             <append_to_list name="player.entity.$LSRIShipyards" exact="$shipyardConfig"/>
           </do_if>
           <debug_text text="'LSRI UpdateShipyardConfig: Id: %s, Config: %s'.[$shipyardId, $shipyardConfig]" chance="100"/>
-          <do_if value="$inputParams.{4} == 'S'">
-            <set_value name="$shipyardConfig.$s" exact="$inputParams.{6}"/>
+          <set_value name="$stateIndex" exact="$shipClasses.indexof.{$inputParams.{4}}"/>
+          <do_if value="$stateIndex gt 0">
+            <set_value name="$shipyardConfig.$state.{$stateIndex}" exact="$inputParams.{6}"/>
           </do_if>
-          <do_elseif value="$inputParams.{4} == 'M'">
-            <set_value name="$shipyardConfig.$m" exact="$inputParams.{6}"/>
-          </do_elseif>
-          <do_elseif value="$inputParams.{4} == 'L'">
-            <set_value name="$shipyardConfig.$l" exact="$inputParams.{6}"/>
-          </do_elseif>
-          <do_elseif value="$inputParams.{4} == 'XL'">
-            <set_value name="$shipyardConfig.$xl" exact="$inputParams.{6}"/>
-          </do_elseif>
           <debug_text text="'LSRI UpdateShipyardConfig: For Id: %s updated Config: %s.\nAll configs: %s'.[$shipyardId, @$shipyardConfig, @player.entity.$LSRIShipyards]" chance="100"/>
+          <remove_value name="$stateIndex"/>
         </do_if>
       </actions>
     </library>
