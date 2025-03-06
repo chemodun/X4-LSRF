@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<diff>
+  <add sel="//do_if[@value='event.object.isplayerowned']" pos="prepend">
+    <include_actions ref="md.LSRI_Shipyards.AddShipyardsConfigurationMenuItem" />
+  </add>
+</diff>

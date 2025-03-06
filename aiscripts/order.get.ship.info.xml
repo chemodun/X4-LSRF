@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<aiscript name="order.get.ship.info" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="100">
+  <order id="GetShipInfo" name="Get Ship Info" description="Get Ship Info" category="navigation" infinite="true">
+  </order>
+  <init>
+    <debug_to_file directory="'getshipinfo'" name="'debug_' + this.ship.idcode + '_' + this.ship"
+            text="'Init on ship %s in sector %s'
+              .[
+                this.ship.debugname,
+                this.ship.sector.knownname
+              ]"
+            output="true" append="true" />
+  </init>
+  <attention min="unknown">
+    <actions>
+      <do_if value="this.ship.order" comment="Safety check in case the script is called from non-order script">
+        <!-- Required for all infinite orders, no effect in case of finite timeout -->
+        <set_order_syncpoint_reached order="this.ship.order" />
+      </do_if>
+      <include_interrupt_actions ref="PrintShipInfo" />
+      <cancel_order order="this.ship.order" />
+      <return/>
+    </actions>
+  </attention>
+</aiscript>

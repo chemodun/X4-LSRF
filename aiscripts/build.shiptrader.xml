@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<diff>
+  <add sel="//do_if[@value='event.param3.construction']">
+    <include_interrupt_actions ref="PrintShipInfo" />
+  </add>
+</diff>

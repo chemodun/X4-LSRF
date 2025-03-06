@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+  <add sel="/language">
+    <page id="1972092404" voice="no" title="lsri" descr="Text for lsri" >
+      <t id="1">Used</t>
+      <t id="10101">Lost Ship Replacement:</t>
+      <t id="10201">UnSet as Default SY</t>
+    </page>
+  </add>
+</diff>

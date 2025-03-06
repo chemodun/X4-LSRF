@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<content
+  id=""
+  name="Get Ship Info"
+  description="Get Ship Info"
+  author="Chem O`Dun"
+  version="100"
+  date="2025-03-04"
+  save="false"
+  >
+  <text language="44" description="Get Ship Info"/>
+</content>

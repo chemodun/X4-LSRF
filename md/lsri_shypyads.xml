@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<mdscript name="LSRI_Shipyards" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="md.xsd">
+  <cues>
+
+    <library name="AddShipyardsConfigurationMenuItem">
+      <actions>
+        <do_if value="$container.canbuildships">
+          <debug_text text="'LSRI Trader Menu Item: Shipyard %s. Ship trader %s. '.[@$actor.assignedcontrolled.debugname, @$actor.debugname]" chance="100"/>
+          <add_player_choice_sub text="{1972092404,10101}" position="bottom_left" section="LSRI_main" choiceparam="[0, 0, @event.object.assignedcontrolled, '', [], true]" comment="LSRI Main menu" />
+        </do_if>
+      </actions>
+    </library>
+
+    <library name="ShipyardsConfigurationMenu">
+      <actions>
+        <!--  -->
+        <debug_text text="'LSRI ShipyardMenu Pressed: Event name: %s,  param: %s, param2: %s'.[event.name, event.param, event.param2]" chance="100"/>
+        <set_value name="$shipyardPrimary" exact="player.conversationactor.assignedcontrolled"/>
+        <do_if value="event.param == 'LSRI_main' and $shipyardPrimary.canbuildships and $shipyardPrimary.isplayerowned">
+          <set_value name="$inputParams" exact="event.param2"/>
+          <set_value name="$shipyardCurrent" exact="if @$inputParams.{3} then $inputParams.{3} else $shipyardPrimary"/>
+          <set_value name="$shipyardId" exact="$shipyardCurrent.idcode" />
+          <debug_text text="'LSRI ShipyardMenuMain: Shipyard Primary: %s, ShipTrader: %s. Shipyard Current: %s'.[$shipyardPrimary.debugname, $actor.debugname, $shipyardCurrent.debugname]" chance="100"/>
+          <find_station_by_true_owner name="$shipyards" canbuildships="true" faction="faction.player" hascontrolentity="controlpost.shiptrader" space="player.galaxy" multiple="true" sortbydistanceto="$shipyardPrimary"/>
+          <set_value name="$shipyardIndex" exact="0"/>
+          <do_if value="@$shipyards and @$shipyards.count > 0">
+            <do_for_each name="$shipyard" in="$shipyards" counter="$shipyardI">
+              <do_if value="$shipyard.idcode == $shipyardId">
+                <set_value name="$shipyardIndex" exact="$shipyardI"/>
+                <break/>
+              </do_if>
+            </do_for_each>
+          </do_if>
+          <debug_text text="'LSRI ShipyardMenuMain: ShipyardIndex: %s. Shipyards: Count:%s, Value: %s'.[$shipyardIndex, $shipyards.count, $shipyards]" chance="100"/>
+          <include_actions ref="GetShipyardConfig" />
+          <include_actions ref="UpdateShipyardConfig" />
+          <debug_text text="'LSRI ShipyardMenuMain: Shipyard: %s, Config: %s'.[$shipyardCurrent.debugname, $shipyardConfig]" chance="100"/>
+          <add_player_choice text="'%s: %s (%s)'.[{1001,92}, $shipyardCurrent.name, $shipyardCurrent.idcode]" position="top_left" section="LSRI_main" choiceparam="[0, 0, $shipyardCurrent, '', [], false]" comment="Current Shipyard" selectable="false"/>
+          <do_if value="$shipyardConfig.$s == true">
+            <add_player_choice text="'%s %s %s: %s'.[{1001,7833}, {1001,51}, {1001,6}, {1001,2617}]" position="left" section="LSRI_main" choiceparam="[0, 0, @$shipyardCurrent, 'S', [], false]" comment="Build S-ships" />
+          </do_if>
+          <do_else>
+            <add_player_choice text="'%s %s %s: %s'.[{1001,7833}, {1001,51}, {1001,6}, {1001,2618}]" position="left" section="LSRI_main" choiceparam="[0, 0, @$shipyardCurrent, 'S', [], true]" comment="Build S-ships" />
+          </do_else>
+          <do_if value="$shipyardConfig.$m == true">
+            <add_player_choice text="'%s %s %s: %s'.[{1001,7833}, {1001,50}, {1001,6}, {1001,2617}]" position="bottom_left" section="LSRI_main" choiceparam="[0, 0, @$shipyardCurrent, 'M', [], false]" comment="Build M-ships" />
+          </do_if>
+          <do_else>
+            <add_player_choice text="'%s %s %s: %s'.[{1001,7833}, {1001,50}, {1001,6}, {1001,2618}]" position="bottom_left" section="LSRI_main" choiceparam="[0, 0, @$shipyardCurrent, 'M', [], true]" comment="Build M-ships" />
+          </do_else>
+          <do_if value="$shipyardConfig.$l == true">
+            <add_player_choice text="'%s %s %s: %s'.[{1001,7833}, {1001,49}, {1001,6}, {1001,2617}]" position="top_right" section="LSRI_main" choiceparam="[0, 0, @$shipyardCurrent, 'L', [], false]" comment="Build L-ships" />
+          </do_if>
+          <do_else>
+            <add_player_choice text="'%s %s %s: %s'.[{1001,7833}, {1001,49}, {1001,6}, {1001,2618}]" position="top_right" section="LSRI_main" choiceparam="[0, 0, @$shipyardCurrent, 'L', [], true]" comment="Build L-ships" />
+          </do_else>
+          <do_if value="$shipyardConfig.$xl == true">
+            <add_player_choice text="'%s %s %s: %s'.[{1001,7833}, {1001,48}, {1001,6}, {1001,2617}]" position="right" section="LSRI_main" choiceparam="[0, 0, @$shipyardCurrent, 'XL', [], false]" comment="Build XL-ships" />
+          </do_if>
+          <do_else>
+            <add_player_choice text="'%s %s %s: %s'.[{1001,7833}, {1001,48}, {1001,6}, {1001,2618}]" position="right" section="LSRI_main" choiceparam="[0, 0, @$shipyardCurrent, 'XL', [], true]" comment="Build XL-ships" />
+          </do_else>
+          <do_if value="$shipyardIndex > 0 and $shipyardIndex le @$shipyards.count">
+            <set_value name="$shipyardIndex" exact="$shipyardIndex + 1"/>
+            <do_if value="$shipyardIndex gt @$shipyards.count">
+              <set_value name="$shipyardIndex" exact="1"/>
+            </do_if>
+            <set_value name="$shipyardNext" exact="$shipyards.{@$shipyardIndex}"/>
+            <debug_text text="'LSRI ShipyardMenuMain: Index new: %s, Next Shipyard: %s'.[$shipyardIndex, @$shipyardNext.debugname]" chance="100"/>
+            <add_player_choice text="'%s: %s (%s)'.[{1001,92}, @$shipyardNext.name, @$shipyardNext.idcode]" position="bottom_right" section="LSRI_main" choiceparam="[0, 0, @$shipyardNext, '', [], false]" comment="Next Shipyard"/>
+          </do_if>
+          <do_else>
+            <add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back"/>
+          </do_else>
+        </do_if>
+        <do_else>
+          <debug_text text="'LSRI ShipyardMenu Pressed: SY: %s, Config: %s. Event: Name: %s, Param: %s, Param2: %s'.[$shipyardCurrent.debugname, $shipyardConfig, event.name, event.param, event.param2]" chance="100"/>
+          <add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back"/>
+        </do_else>
+        <remove_value name="$shipyardIndex"/>
+        <remove_value name="$shipyard"/>
+        <remove_value name="$shipyardI"/>
+        <remove_value name="$shipyardId"/>
+        <remove_value name="$inputParams"/>
+        <remove_value name="$shipyardPrimary"/>
+        <remove_value name="$shipyards"/>
+        <remove_value name="$shipyardCurrent"/>
+        <remove_value name="$shipyardNext"/>
+        <remove_value name="$shipyardConfig"/>
+      </actions>
+    </library>
+
+    <library name="GetShipyardConfig">
+      <actions>
+        <do_if value="@player.entity.$LSRIShipyards" negate="true">
+          <set_value name="player.entity.$LSRIShipyards" exact="[]"/>
+        </do_if>
+        <set_value name="$shipyardsList" exact="player.entity.$LSRIShipyards"/>
+        <debug_text text="'LSRI ShipyardConfig: Id: %s, ShipyardList: %s'.[$shipyardId, $shipyardsList]" chance="100"/>
+        <do_for_each name="$shipyardConf" in="$shipyardsList">
+          <do_if value="$shipyardConf.$id == $shipyardId">
+            <set_value name="$shipyardConfig" exact="$shipyardConf"/>
+            <break/>
+          </do_if>
+        </do_for_each>
+        <debug_text text="'LSRI ShipyardConfig: For Id: %s found Config: %s'.[$shipyardId, @$shipyardConfig]" chance="100"/>
+        <do_if value="@$shipyardConfig" negate="true">
+          <set_value name="$shipyardConfig" exact="table[$id = $shipyardId, $s = true, $m = true, $l = true, $xl = true]"/>
+          <append_to_list name="$shipyardsList" exact="$shipyardConfig"/>
+          <set_value name="player.entity.$LSRIShipyards" exact="$shipyardsList"/>
+          <debug_text text="'LSRI ShipyardConfig: For Id: %s created Config: %s'.[$shipyardId, $shipyardConfig]" chance="100"/>
+        </do_if>
+        <remove_value name="$shipyardsList" />
+        <remove_value name="$shipyardConf"/>
+      </actions>
+    </library>
+
+    <library name="UpdateShipyardConfig">
+      <actions>
+        <do_if value="@$inputParams.{3}">
+          <do_if value="@player.entity.$LSRIShipyards" negate="true">
+            <set_value name="player.entity.$LSRIShipyards" exact="[]"/>
+            <append_to_list name="player.entity.$LSRIShipyards" exact="$shipyardConfig"/>
+          </do_if>
+          <debug_text text="'LSRI UpdateShipyardConfig: Id: %s, Config: %s'.[$shipyardId, $shipyardConfig]" chance="100"/>
+          <do_if value="$inputParams.{4} == 'S'">
+            <set_value name="$shipyardConfig.$s" exact="$inputParams.{6}"/>
+          </do_if>
+          <do_elseif value="$inputParams.{4} == 'M'">
+            <set_value name="$shipyardConfig.$m" exact="$inputParams.{6}"/>
+          </do_elseif>
+          <do_elseif value="$inputParams.{4} == 'L'">
+            <set_value name="$shipyardConfig.$l" exact="$inputParams.{6}"/>
+          </do_elseif>
+          <do_elseif value="$inputParams.{4} == 'XL'">
+            <set_value name="$shipyardConfig.$xl" exact="$inputParams.{6}"/>
+          </do_elseif>
+          <debug_text text="'LSRI UpdateShipyardConfig: For Id: %s updated Config: %s.\nAll configs: %s'.[$shipyardId, @$shipyardConfig, @player.entity.$LSRIShipyards]" chance="100"/>
+        </do_if>
+      </actions>
+    </library>
+
+     <cue name="ShipyardMainMenuHandler" instantiate="true" >
+        <conditions>
+          <check_any>
+            <event_conversation_started convprefix="LSRI_" />
+            <event_conversation_next_section sectionprefix="LSRI_" />
+            <event_conversation_returned_to_section sectionprefix="LSRI_" />
+          </check_any>
+        </conditions>
+        <actions>
+          <set_value name="$actor" exact="player.conversationactor" />
+          <debug_text text="'LSRI ShipyardMainMenuHandler: SY: %s, Actor: %s. Event: %s'.[$actor.assignedcontrolled, $actor.debugname, event.name]" chance="100"/>
+          <include_actions ref="ShipyardsConfigurationMenu" />
+        </actions>
+      </cue>
+
+  </cues>
+</mdscript>
