@@ -21,7 +21,7 @@ When it is configured and some of your ships are destroyed, the appropriate ship
 ## Download
 
 You can download the latest version via Steam client - [Lost Ship Replacement Filters](https://steamcommunity.com/sharedfiles/filedetails/?id=3439691722)
-Or you can do it via the NexusMods: [Lost Ship Replacement Filters](https://www.nexusmods.com/x4foundations/mods/)
+Or you can do it via the NexusMods: [Lost Ship Replacement Filters](https://www.nexusmods.com/x4foundations/mods/1640)
 
 ## Configuration
 
