@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Korean -->
+<diff>
+  <add sel="/language">
+    <page id="1972092404" voice="no" title="Lost Ship Replacement Filters" descr="Text for Lost Ship Replacement Filters" >
+      <t id="10101">잃어버린 배 교체 필터</t>
+    </page>
+  </add>
+</diff>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- English -->
+<diff>
+  <add sel="/language">
+    <page id="1972092404" voice="no" title="Lost Ship Replacement Filters" descr="Text for Lost Ship Replacement Filters" >
+      <t id="10101">Lost Ship Replacement Filters</t>
+    </page>
+  </add>
+</diff>
