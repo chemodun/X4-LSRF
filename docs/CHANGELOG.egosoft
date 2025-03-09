@@ -1,0 +1,14 @@
+[size=140][u]Changelog[/u][/size]
+
+[size=130][u][1.01] - 2025-03-10[/u][/size]
+
+[size=125][u]Fixed[/u][/size]
+[list]
+[*] If not all Shipyard Filters are set, the wrong one can accidentally be used.
+[/list]
+[size=130][u][1.00] - 2025-03-07[/u][/size]
+
+[size=125][u]Added[/u][/size]
+[list]
+[*] Initial version of the Shipyard Filters extension.
+[/list]
