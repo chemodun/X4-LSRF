@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <diff>
-  <replace sel="//include_actions/@ref">md.LSRF_Shipyards.FindClosestShipyardsForReconstitution</replace>
-  <remove sel="//do_if[@value='$locshipyard.canbuildmacro.{$locship.macro}']" />
-  <remove sel="//do_if[@value='$shipstobereplaced.count']/do_for_each/do_else/do_for_each/do_else" />
-  <add sel="//set_value[@name='$missingequipment']" pos="before">
+  <replace sel="/mdscript/cues/cue[@name='Init']/cues/cue[@name='ProcessRequest']/actions/do_if[@value='$shipstobereplaced.count']/include_actions[@ref='FindClosestShipyards']/@ref">md.LSRF_Shipyards.FindClosestShipyardsForReconstitution</replace>
+  <remove sel="/mdscript/cues/cue[@name='Init']/cues/cue[@name='ProcessRequest']/actions/do_if[@value='$shipstobereplaced.count']/do_for_each[@name='$locship']/do_else/do_for_each[@name='$locshipyard']/do_if[@value='$locshipyard.canbuildmacro.{$locship.macro}']" />
+  <remove sel="/mdscript/cues/cue[@name='Init']/cues/cue[@name='ProcessRequest']/actions/do_if[@value='$shipstobereplaced.count']/do_for_each[@name='$locship']/do_else/do_for_each[@name='$locshipyard']/do_else" />
+  <add sel="/mdscript/cues/cue[@name='Init']/cues/cue[@name='ProcessRequest']/actions/do_if[@value='$shipstobereplaced.count']/do_for_each[@name='$locship']/do_else/do_for_each[@name='$locshipyard']/set_value[@name='$missingequipment']" pos="before">
     <include_actions ref="md.LSRF_Shipyards.PreFilterShipyardForReconstitution" />
   </add>
 </diff>
