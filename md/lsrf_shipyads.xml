@@ -2,192 +2,197 @@
 <mdscript name="LSRF_Shipyards" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="md.xsd">
   <cues>
 
-    <library name="AddShipyardsConfigurationMenuItem" version="100">
-      <actions>
-        <do_if value="$container.canbuildships">
-          <debug_text
-            text="'LSRF Trader Menu Item: Shipyard %s. Ship trader %s. '.[@$actor.assignedcontrolled.debugname, @$actor.debugname]"
-            chance="0" />
-          <add_player_choice_sub text="{1972092404,10101}" position="bottom_left" section="LSRF_main"
-            choiceparam="[0, 0, @event.object.assignedcontrolled, '', [], true]" comment="LSRF Main menu" />
-        </do_if>
-      </actions>
-    </library>
-
-    <library name="ShipyardsConfigurationMenu" version="100">
-      <actions>
-        <!--  -->
-        <debug_text text="'LSRF ShipyardMenu Pressed: Event name: %s,  param: %s, param2: %s'.[event.name, event.param, event.param2]"
-          chance="0" />
-        <set_value name="$shipyardPrimary" exact="player.conversationactor.assignedcontrolled" />
-        <do_if value="event.param == 'LSRF_main' and $shipyardPrimary.canbuildships and $shipyardPrimary.isplayerowned">
-          <set_value name="$inputParams" exact="event.param2" />
-          <set_value name="$shipyardCurrent" exact="if @$inputParams.{3} then $inputParams.{3} else $shipyardPrimary" />
-          <set_value name="$shipyardId" exact="$shipyardCurrent.idcode" />
-          <debug_text
-            text="'LSRF ShipyardMenuMain: Shipyard Primary: %s, ShipTrader: %s. Shipyard Current: %s'.[$shipyardPrimary.debugname, $actor.debugname, $shipyardCurrent.debugname]"
-            chance="0" />
-          <find_station_by_true_owner name="$shipyards" canbuildships="true" faction="faction.player"
-            hascontrolentity="controlpost.shiptrader" space="player.galaxy" multiple="true" sortbydistanceto="$shipyardPrimary" />
-          <set_value name="$shipyardIndex" exact="0" />
-          <do_if value="@$shipyards and @$shipyards.count > 0">
-            <set_value name="$shipyardIndex" exact="$shipyards.indexof.{$shipyardCurrent}" />
-          </do_if>
-          <debug_text
-            text="'LSRF ShipyardMenuMain: ShipyardIndex: %s. Shipyards: Count:%s, Value: %s'.[$shipyardIndex, $shipyards.count, $shipyards]"
-            chance="0" />
-          <set_value name="$shipClasses" exact="[class.ship_s, class.ship_m, class.ship_l, class.ship_xl]" />
-          <set_value name="$shipClassIds" exact="[{1001,51}, {1001, 50}, {1001, 49}, {1001, 48}]" />
-          <include_actions ref="GetShipyardConfig" />
-          <include_actions ref="UpdateShipyardConfig" />
-          <debug_text text="'LSRF ShipyardMenuMain: Shipyard: %s, Config: %s'.[$shipyardCurrent.debugname, $shipyardConfig]" chance="0" />
-          <add_player_choice text="'%s: %s (%s)'.[{1001,92}, $shipyardCurrent.name, $shipyardCurrent.idcode]" position="top_left"
-            section="LSRF_main" choiceparam="[0, 0, $shipyardCurrent, '', [], false]" comment="Current Shipyard" selectable="false" />
-          <do_for_each name="$shipClass" in="$shipClasses" counter="$i">
-            <set_value name="$status" exact="if $shipyardConfig.$state.{$i} then {1001,12642} else {1001, 12641}" />
-            <set_value name="$position" exact="$i + 1" />
-            <add_player_choice text="'%s %s-%s: %s'.[{1001,7833}, $shipClassIds.{$i}, {1001,6}, $status]" position="$position"
-              section="LSRF_main" choiceparam="[0, 0, @$shipyardCurrent, $shipClass, [], not $shipyardConfig.$state.{$i}]"
-              comment="Build Ships" selectable="$shipyardCurrent.canbuildclass.{$shipClass}" />
-          </do_for_each>
-          <do_if value="$shipyardIndex > 0 and $shipyardIndex le @$shipyards.count">
-            <set_value name="$shipyardIndex" operation="add" />
-            <do_if value="$shipyardIndex gt @$shipyards.count">
-              <set_value name="$shipyardIndex" exact="1" />
-            </do_if>
-            <set_value name="$shipyardNext" exact="$shipyards.{@$shipyardIndex}" />
-            <debug_text text="'LSRF ShipyardMenuMain: Index new: %s, Next Shipyard: %s'.[$shipyardIndex, @$shipyardNext.debugname]"
-              chance="0" />
-            <add_player_choice text="'%s: %s (%s)'.[{1001,92}, @$shipyardNext.name, @$shipyardNext.idcode]" position="bottom_right"
-              section="LSRF_main" choiceparam="[0, 0, @$shipyardNext, '', [], false]" comment="Next Shipyard" />
-          </do_if>
-          <do_else>
-            <add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back" />
-          </do_else>
-        </do_if>
-        <do_else>
-          <debug_text
-            text="'LSRF ShipyardMenu Pressed: SY: %s, Config: %s. Event: Name: %s, Param: %s, Param2: %s'.[$shipyardCurrent.debugname, $shipyardConfig, event.name, event.param, event.param2]"
-            chance="0" />
-          <add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back" />
-        </do_else>
-        <remove_value name="$shipClass" />
-        <remove_value name="$shipClasses" />
-        <remove_value name="$status" />
-        <remove_value name="$position" />
-        <remove_value name="$i" />
-        <remove_value name="$shipyardIndex" />
-        <remove_value name="$shipyard" />
-        <remove_value name="$shipyardI" />
-        <remove_value name="$shipyardId" />
-        <remove_value name="$inputParams" />
-        <remove_value name="$shipyardPrimary" />
-        <remove_value name="$shipyards" />
-        <remove_value name="$shipyardCurrent" />
-        <remove_value name="$shipyardNext" />
-        <remove_value name="$shipyardConfig" />
-      </actions>
-    </library>
-
-    <library name="GetShipyardConfig" version="100">
-      <actions>
-        <do_if value="@player.entity.$LSRFShipyards" negate="true">
-          <set_value name="player.entity.$LSRFShipyards" exact="[]" />
-        </do_if>
-        <set_value name="$shipyardsList" exact="player.entity.$LSRFShipyards" />
-        <debug_text text="'LSRF ShipyardConfig: Id: %s, ShipyardList: %s'.[$shipyardId, $shipyardsList]" chance="0" />
-        <remove_value name="$shipyardConfig" />
-        <do_for_each name="$shipyardConf" in="$shipyardsList">
-          <do_if value="$shipyardConf.$id == $shipyardId">
-            <set_value name="$shipyardConfig" exact="$shipyardConf" />
-            <break />
-          </do_if>
-        </do_for_each>
-        <debug_text text="'LSRF ShipyardConfig: For Id: %s found Config: %s'.[$shipyardId, @$shipyardConfig]" chance="0" />
-        <do_if value="@$shipyardConfig" negate="true">
-          <set_value name="$shipyardConfig" exact="table[$id = $shipyardId, $state = [true, true, true, true]]" />
-          <append_to_list name="$shipyardsList" exact="$shipyardConfig" />
-          <set_value name="player.entity.$LSRFShipyards" exact="$shipyardsList" />
-          <debug_text text="'LSRF ShipyardConfig: For Id: %s created Config: %s'.[$shipyardId, $shipyardConfig]" chance="0" />
-        </do_if>
-        <remove_value name="$shipyardsList" />
-        <remove_value name="$shipyardConf" />
-      </actions>
-    </library>
-
-    <library name="UpdateShipyardConfig" version="100">
-      <actions>
-        <do_if value="@$inputParams.{3}">
-          <do_if value="@player.entity.$LSRFShipyards" negate="true">
-            <set_value name="player.entity.$LSRFShipyards" exact="[]" />
-            <append_to_list name="player.entity.$LSRFShipyards" exact="$shipyardConfig" />
-          </do_if>
-          <debug_text text="'LSRF UpdateShipyardConfig: Id: %s, Config: %s'.[$shipyardId, $shipyardConfig]" chance="0" />
-          <set_value name="$stateIndex" exact="$shipClasses.indexof.{$inputParams.{4}}" />
-          <do_if value="$stateIndex gt 0">
-            <set_value name="$shipyardConfig.$state.{$stateIndex}" exact="$inputParams.{6}" />
-          </do_if>
-          <debug_text
-            text="'LSRF UpdateShipyardConfig: For Id: %s updated Config: %s.\nAll configs: %s'.[$shipyardId, @$shipyardConfig, @player.entity.$LSRFShipyards]"
-            chance="0" />
-          <remove_value name="$stateIndex" />
-        </do_if>
-      </actions>
-    </library>
-
-    <cue name="ShipyardMainMenuHandler" instantiate="true" version="101">
+    <cue name="Main" version="102">
       <conditions>
-        <check_any>
-          <event_conversation_started convprefix="LSRF_" />
-          <event_conversation_next_section sectionprefix="LSRF_" />
-          <event_conversation_returned_to_section sectionprefix="LSRF_" />
-        </check_any>
+        <event_cue_signalled cue="md.Setup.Start" />
       </conditions>
       <actions>
-        <set_value name="$actor" exact="player.conversationactor" />
-        <debug_text
-          text="'LSRF ShipyardMainMenuHandler: SY: %s, Actor: %s. Event: %s'.[$actor.assignedcontrolled, $actor.debugname, event.name]"
-          chance="0" />
-        <include_actions ref="ShipyardsConfigurationMenu" />
-      </actions>
-    </cue>
-
-    <library name="FindClosestShipyardsForReconstitution" version="100">
-      <actions>
-        <find_station_by_true_owner groupname="$shipyards" canbuildships="true" faction="$commander.owner"
-          hascontrolentity="controlpost.shiptrader" space="player.galaxy" multiple="true" sortbydistanceto="$commander" />
-        <debug_text text="'LSRF FindClosestShipyardForReconstitution: Shipyards: %s, Commander: %s'.[$shipyards, $commander.debugname]"
-          chance="0" />
-      </actions>
-    </library>
-
-    <library name="PreFilterShipyardForReconstitution" version="100">
-      <actions>
-        <debug_text text="'LSRF PreFilterShipyardForReconstitution: Ship Macro: %s, Shipyard: %s'.[$locship.macro, $locshipyard]"
-          chance="0" />
-        <set_value name="$shipyardId" exact="$locshipyard.idcode" />
-        <set_value name="$shipClasses" exact="[class.ship_s, class.ship_m, class.ship_l, class.ship_xl]" />
-        <set_value name="$shipClassIndex" exact="$shipClasses.indexof.{$locship.macro.class}" />
-        <include_actions ref="md.LSRF_Shipyards.GetShipyardConfig" />
-        <do_if value="@$shipyardConfig.$state.{$shipClassIndex}">
-          <do_if value="$locshipyard.canbuildmacro.{$locship.macro}">
-            <set_value name="$canbuildmacro" exact="true" />
+        <set_value name="$DebugChance" exact="0" />
+        <do_if value="$shipyardsConfigs? and typeof $shipyardsConfigs == datatype.list" negate="true">
+          <create_list name="$shipyardsConfigs" />
+          <do_if value="player.entity.$LSRFShipyards? and typeof player.entity.$LSRFShipyards == datatype.list">
+            <append_to_list name="$shipyardsConfigs" exact="player.entity.$LSRFShipyards" />
+            <clear_list list="player.entity.$LSRFShipyards" />
+            <remove_value name="player.entity.$LSRFShipyards" />
           </do_if>
-          <do_else>
-            <set_value name="$shipyardfails" exact="true" />
-          </do_else>
         </do_if>
-        <do_else>
-          <debug_text
-            text="'LSRF PreFilterShipyardForReconstitution: This ship class %s is disabled on %s.'.[$locship.macro.class, $locshipyard.debugname]" />
-          <set_value name="$shipyardfails" exact="true" />
-        </do_else>
-        <debug_text
-          text="'LSRF PreFilterShipyardForReconstitution: Shipyard: %s, Fails: %s, Can build: %s'.[$locshipyard.debugname, $shipyardfails, $canbuildmacro]" />
-        <remove_value name="$shipyardId" />
-        <remove_value name="$shipClasses" />
+        <do_if value="$shipClasses? and typeof $shipClasses == datatype.list" negate="true">
+          <set_value name="$shipClasses" exact="[class.ship_s, class.ship_m, class.ship_l, class.ship_xl]" />
+        </do_if>
+        <do_if value="$shipClassIds? and typeof $shipClassIds == datatype.list" negate="true">
+          <set_value name="$shipClassIds" exact="[{1001,51}, {1001, 50}, {1001, 49}, {1001, 48}]" />
+        </do_if>
       </actions>
-    </library>
+      <cues>
 
+        <library name="AddShipyardsConfigurationMenuItem" version="102">
+          <actions>
+            <do_if value="$container.canbuildships">
+              <debug_text
+                text="'LSRF Trader Menu Item: Shipyard %s. Ship trader %s. '.[@$actor.assignedcontrolled.debugname, @$actor.debugname]"
+                chance="0" />
+              <add_player_choice_sub text="{1972092404,10101}" position="bottom_left" section="LSRF_main"
+                choiceparam="[0, 0, @event.object.assignedcontrolled, '', [], true]" comment="LSRF Main menu" />
+            </do_if>
+          </actions>
+        </library>
+
+        <library name="ShipyardsConfigurationMenu" version="102">
+          <actions>
+            <!--  -->
+            <debug_text text="'LSRF ShipyardMenu Pressed: Event name: %s,  param: %s, param2: %s'.[event.name, event.param, event.param2]"
+              chance="0" />
+            <set_value name="$shipyardPrimary" exact="player.conversationactor.assignedcontrolled" />
+            <do_if value="event.param == 'LSRF_main' and $shipyardPrimary.canbuildships and $shipyardPrimary.isplayerowned">
+              <set_value name="$inputParams" exact="event.param2" />
+              <set_value name="$shipyardCurrent" exact="if @$inputParams.{3} then $inputParams.{3} else $shipyardPrimary" />
+              <set_value name="$shipyardId" exact="$shipyardCurrent.idcode" />
+              <debug_text
+                text="'LSRF ShipyardMenuMain: Shipyard Primary: %s, ShipTrader: %s. Shipyard Current: %s'.[$shipyardPrimary.debugname, $actor.debugname, $shipyardCurrent.debugname]"
+                chance="0" />
+              <find_station_by_true_owner name="$shipyards" canbuildships="true" faction="faction.player"
+                hascontrolentity="controlpost.shiptrader" space="player.galaxy" multiple="true" sortbydistanceto="$shipyardPrimary" />
+              <set_value name="$shipyardIndex" exact="0" />
+              <do_if value="@$shipyards and @$shipyards.count > 0">
+                <set_value name="$shipyardIndex" exact="$shipyards.indexof.{$shipyardCurrent}" />
+              </do_if>
+              <debug_text
+                text="'LSRF ShipyardMenuMain: ShipyardIndex: %s. Shipyards: Count:%s, Value: %s'.[$shipyardIndex, $shipyards.count, $shipyards]"
+                chance="0" />
+              <include_actions ref="GetShipyardConfig" />
+              <include_actions ref="UpdateShipyardConfig" />
+              <debug_text text="'LSRF ShipyardMenuMain: Shipyard: %s, Config: %s'.[$shipyardCurrent.debugname, $shipyardConfig]" chance="0" />
+              <add_player_choice text="'%s: %s (%s)'.[{1001,92}, $shipyardCurrent.name, $shipyardCurrent.idcode]" position="top_left"
+                section="LSRF_main" choiceparam="[0, 0, $shipyardCurrent, '', [], false]" comment="Current Shipyard" selectable="false" />
+              <do_for_each name="$shipClass" in="$shipClasses" counter="$i">
+                <set_value name="$status" exact="if $shipyardConfig.$state.{$i} then {1001,12642} else {1001, 12641}" />
+                <set_value name="$position" exact="$i + 1" />
+                <add_player_choice text="'%s %s-%s: %s'.[{1001,7833}, $shipClassIds.{$i}, {1001,6}, $status]" position="$position"
+                  section="LSRF_main" choiceparam="[0, 0, @$shipyardCurrent, $shipClass, [], not $shipyardConfig.$state.{$i}]"
+                  comment="Build Ships" selectable="$shipyardCurrent.canbuildclass.{$shipClass}" />
+                <remove_value name="$status" />
+                <remove_value name="$position" />
+                <remove_value name="$shipyardId" />
+              </do_for_each>
+              <do_if value="$shipyardIndex > 0 and $shipyardIndex le @$shipyards.count">
+                <set_value name="$shipyardIndex" operation="add" />
+                <do_if value="$shipyardIndex gt @$shipyards.count">
+                  <set_value name="$shipyardIndex" exact="1" />
+                </do_if>
+                <set_value name="$shipyardNext" exact="$shipyards.{@$shipyardIndex}" />
+                <debug_text text="'LSRF ShipyardMenuMain: Index new: %s, Next Shipyard: %s'.[$shipyardIndex, @$shipyardNext.debugname]"
+                  chance="0" />
+                <add_player_choice text="'%s: %s (%s)'.[{1001,92}, @$shipyardNext.name, @$shipyardNext.idcode]" position="bottom_right"
+                  section="LSRF_main" choiceparam="[0, 0, @$shipyardNext, '', [], false]" comment="Next Shipyard" />
+              </do_if>
+              <do_else>
+                <add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back" />
+              </do_else>
+              <remove_value name="$shipyardIndex" />
+              <remove_value name="$inputParams" />
+              <remove_value name="$shipyards" />
+              <remove_value name="$shipyardCurrent" />
+              <remove_value name="$shipyardNext" />
+              <remove_value name="$shipyardConfig" />
+            </do_if>
+            <do_else>
+              <debug_text
+                text="'LSRF ShipyardMenu Pressed: SY: %s, Config: %s. Event: Name: %s, Param: %s, Param2: %s'.[$shipyardPrimary.debugname, $shipyardsConfigs, event.name, event.param, event.param2]"
+                chance="0" />
+              <add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back" />
+            </do_else>
+            <remove_value name="$shipyardPrimary" />
+          </actions>
+        </library>
+
+        <library name="GetShipyardConfig" version="102">
+          <actions>
+            <debug_text text="'LSRF ShipyardConfig: Id: %s, ShipyardList: %s'.[$shipyardId, md.LSRF_Shipyards.Main.$shipyardsConfigs]"
+              chance="0" />
+            <remove_value name="$shipyardConfig" />
+            <do_for_each name="$shipyardConf" in="md.LSRF_Shipyards.Main.$shipyardsConfigs">
+              <do_if value="$shipyardConf.$id == $shipyardId">
+                <set_value name="$shipyardConfig" exact="$shipyardConf" />
+                <break />
+              </do_if>
+            </do_for_each>
+            <debug_text text="'LSRF ShipyardConfig: For Id: %s found Config: %s'.[$shipyardId, @$shipyardConfig]" chance="0" />
+            <do_if value="@$shipyardConfig" negate="true">
+              <set_value name="$shipyardConfig" exact="table[$id = $shipyardId, $state = [true, true, true, true]]" />
+              <append_to_list name="md.LSRF_Shipyards.Main.$shipyardsConfigs" exact="$shipyardConfig" />
+              <debug_text text="'LSRF ShipyardConfig: For Id: %s created Config: %s'.[$shipyardId, $shipyardConfig]" chance="0" />
+            </do_if>
+          </actions>
+        </library>
+
+        <library name="UpdateShipyardConfig" version="102">
+          <actions>
+            <do_if value="@$inputParams.{3}">
+              <debug_text text="'LSRF UpdateShipyardConfig: Id: %s, Config: %s'.[$shipyardId, $shipyardConfig]" chance="0" />
+              <set_value name="$stateIndex" exact="$shipClasses.indexof.{$inputParams.{4}}" />
+              <do_if value="$stateIndex gt 0">
+                <set_value name="$shipyardConfig.$state.{$stateIndex}" exact="$inputParams.{6}" />
+              </do_if>
+              <debug_text
+                text="'LSRF UpdateShipyardConfig: For Id: %s updated Config: %s.\nAll configs: %s'.[$shipyardId, @$shipyardConfig, @$shipyardsConfigs]"
+                chance="0" />
+              <remove_value name="$stateIndex" />
+            </do_if>
+          </actions>
+        </library>
+
+        <cue name="ShipyardMainMenuHandler" instantiate="true" version="102">
+          <conditions>
+            <check_any>
+              <event_conversation_started convprefix="LSRF_" />
+              <event_conversation_next_section sectionprefix="LSRF_" />
+              <event_conversation_returned_to_section sectionprefix="LSRF_" />
+            </check_any>
+          </conditions>
+          <actions>
+            <set_value name="$actor" exact="player.conversationactor" />
+            <debug_text
+              text="'LSRF ShipyardMainMenuHandler: SY: %s, Actor: %s. Event: %s'.[$actor.assignedcontrolled, $actor.debugname, event.name]"
+              chance="0" />
+            <include_actions ref="ShipyardsConfigurationMenu" />
+          </actions>
+        </cue>
+
+        <library name="FindClosestShipyardsForReconstitution" version="102">
+          <actions>
+            <find_station_by_true_owner groupname="$shipyards" canbuildships="true" faction="$commander.owner"
+              hascontrolentity="controlpost.shiptrader" space="player.galaxy" multiple="true" sortbydistanceto="$commander" />
+            <debug_text text="'LSRF FindClosestShipyardForReconstitution: Shipyards: %s, Commander: %s'.[$shipyards, $commander.debugname]"
+              chance="0" />
+          </actions>
+        </library>
+
+        <library name="PreFilterShipyardForReconstitution" version="102">
+          <actions>
+            <debug_text text="'LSRF PreFilterShipyardForReconstitution: Ship Macro: %s, Shipyard: %s'.[$locship.macro, $locshipyard]"
+              chance="0" />
+            <set_value name="$shipyardId" exact="$locshipyard.idcode" />
+            <set_value name="$shipClassIndex" exact="md.LSRF_Shipyards.Main.$shipClasses.indexof.{$locship.macro.class}" />
+            <include_actions ref="md.LSRF_Shipyards.GetShipyardConfig" />
+            <do_if value="@$shipyardConfig.$state.{$shipClassIndex}">
+              <do_if value="$locshipyard.canbuildmacro.{$locship.macro}">
+                <set_value name="$canbuildmacro" exact="true" />
+              </do_if>
+              <do_else>
+                <set_value name="$shipyardfails" exact="true" />
+              </do_else>
+            </do_if>
+            <do_else>
+              <debug_text
+                text="'LSRF PreFilterShipyardForReconstitution: This ship class %s is disabled on %s.'.[$locship.macro.class, $locshipyard.debugname]" />
+              <set_value name="$shipyardfails" exact="true" />
+            </do_else>
+            <debug_text
+              text="'LSRF PreFilterShipyardForReconstitution: Shipyard: %s, Fails: %s, Can build: %s'.[$locshipyard.debugname, $shipyardfails, $canbuildmacro]" />
+            <remove_value name="$shipyardId" />
+          </actions>
+        </library>
+      </cues>
+    </cue>
   </cues>
 </mdscript>
