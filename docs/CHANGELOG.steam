@@ -1,5 +1,11 @@
 [h1]Changelog[/h1]
 
+[h2][b][1.02] - 2025-03-19[/b][/h2]
+
+[h2]Fixed[/h2]
+[list]
+[*] Some internal improvements. Get rid of storing configs under the  [b]player.entity[/b].
+[/list]
 [h2][b][1.01] - 2025-03-10[/b][/h2]
 
 [h2]Fixed[/h2]
