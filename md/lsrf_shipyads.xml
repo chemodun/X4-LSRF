@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mdscript name="LSRF_Shipyards" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="md.xsd">
+<mdscript name="LSRF_ShipyardsConfigs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="md.xsd">
   <cues>
 
     <cue name="Main" version="102">
@@ -8,10 +8,19 @@
       </conditions>
       <actions>
         <set_value name="$DebugChance" exact="0" />
+        <debug_text text="'LSRF Main: Shipyards %s. '.[@$shipyardsConfigs]" chance="0" />
         <do_if value="$shipyardsConfigs? and typeof $shipyardsConfigs == datatype.list" negate="true">
           <create_list name="$shipyardsConfigs" />
+          <debug_text
+            text="'LSRF Main: Shipyards created %s. Old one is: Count: %s. Data: %s.'.
+            [@$shipyardsConfigs, @player.entity.$LSRFShipyards.count, @player.entity.$LSRFShipyards]"
+            chance="0" />
           <do_if value="player.entity.$LSRFShipyards? and typeof player.entity.$LSRFShipyards == datatype.list">
-            <append_to_list name="$shipyardsConfigs" exact="player.entity.$LSRFShipyards" />
+            <append_list_elements name="$shipyardsConfigs" other="player.entity.$LSRFShipyards" />
+            <debug_text
+              text="'LSRF Main: Shipyards from old one is: Count: %s. Data: %s.'.
+              [@$shipyardsConfigs.count, @$shipyardsConfigs]"
+              chance="0" />
             <clear_list list="player.entity.$LSRFShipyards" />
             <remove_value name="player.entity.$LSRFShipyards" />
           </do_if>
@@ -107,10 +116,11 @@
 
         <library name="GetShipyardConfig" version="102">
           <actions>
-            <debug_text text="'LSRF ShipyardConfig: Id: %s, ShipyardList: %s'.[$shipyardId, md.LSRF_Shipyards.Main.$shipyardsConfigs]"
+            <debug_text
+              text="'LSRF ShipyardConfig: Id: %s, ShipyardList: %s'.[$shipyardId, md.LSRF_ShipyardsConfigs.Main.$shipyardsConfigs]"
               chance="0" />
             <remove_value name="$shipyardConfig" />
-            <do_for_each name="$shipyardConf" in="md.LSRF_Shipyards.Main.$shipyardsConfigs">
+            <do_for_each name="$shipyardConf" in="md.LSRF_ShipyardsConfigs.Main.$shipyardsConfigs">
               <do_if value="$shipyardConf.$id == $shipyardId">
                 <set_value name="$shipyardConfig" exact="$shipyardConf" />
                 <break />
@@ -119,7 +129,7 @@
             <debug_text text="'LSRF ShipyardConfig: For Id: %s found Config: %s'.[$shipyardId, @$shipyardConfig]" chance="0" />
             <do_if value="@$shipyardConfig" negate="true">
               <set_value name="$shipyardConfig" exact="table[$id = $shipyardId, $state = [true, true, true, true]]" />
-              <append_to_list name="md.LSRF_Shipyards.Main.$shipyardsConfigs" exact="$shipyardConfig" />
+              <append_to_list name="md.LSRF_ShipyardsConfigs.Main.$shipyardsConfigs" exact="$shipyardConfig" />
               <debug_text text="'LSRF ShipyardConfig: For Id: %s created Config: %s'.[$shipyardId, $shipyardConfig]" chance="0" />
             </do_if>
           </actions>
@@ -172,8 +182,8 @@
             <debug_text text="'LSRF PreFilterShipyardForReconstitution: Ship Macro: %s, Shipyard: %s'.[$locship.macro, $locshipyard]"
               chance="0" />
             <set_value name="$shipyardId" exact="$locshipyard.idcode" />
-            <set_value name="$shipClassIndex" exact="md.LSRF_Shipyards.Main.$shipClasses.indexof.{$locship.macro.class}" />
-            <include_actions ref="md.LSRF_Shipyards.GetShipyardConfig" />
+            <set_value name="$shipClassIndex" exact="md.LSRF_ShipyardsConfigs.Main.$shipClasses.indexof.{$locship.macro.class}" />
+            <include_actions ref="md.LSRF_ShipyardsConfigs.GetShipyardConfig" />
             <do_if value="@$shipyardConfig.$state.{$shipClassIndex}">
               <do_if value="$locshipyard.canbuildmacro.{$locship.macro}">
                 <set_value name="$canbuildmacro" exact="true" />

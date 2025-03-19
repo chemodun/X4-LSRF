@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <diff>
   <add sel="/mdscript/cues/cue[@name='Base']/cues/cue[@name='DefaultComm']/actions/do_else/do_if[@value='event.object.isplayerowned']" pos="prepend">
-    <include_actions ref="md.LSRF_Shipyards.AddShipyardsConfigurationMenuItem" />
+    <include_actions ref="md.LSRF_ShipyardsConfigs.AddShipyardsConfigurationMenuItem" />
   </add>
 </diff>
