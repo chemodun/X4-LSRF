@@ -5,16 +5,17 @@ Filtering can be made by the ship class, i.e. per S, M, L, XL ships.
 
 [size=130][u]Compatibility[/u][/size]
 
-Compatible with [b]X4: Foundations 7.50[/b]. At least it has been written for feature introduced in this version.
+Compatible with [b]X4: Foundations 7.50[/b] and upper. At least it has been written for feature introduced in this version.
 
 [size=130][u]Features[/u][/size]
-
-Possibility to configure exclusions of any Shipyards via the interface of any Ship Dealer.
-You can easily select which Shipyards are allowed to produce selected ship classes.
-
+[list]
+[*] Possibility to configure exclusions of any Shipyards via the interface of any Ship Trader.
+[*] You can easily select which Shipyards are allowed to produce selected ship classes.
+[*] Support for the context menu, if any kind of the [b]X4 Mod Support APIs[/b] is installed (Not required, but recommended for better user experience).
+[/list]
 [size=130][u]How it works[/u][/size]
 
-After installation, you will see a new button in the Ship Dealer interface.
+After installation, you will see a new button in the Ship Trader interface.
 By clicking on it, you will have the possibility to go through all your shipyards and select which of them are allowed to produce selected ship classes.
 When it is configured and some of your ships are destroyed, the appropriate shipyard will be selected for the Lost Ship Replacement based on the configuration and distance to the shipyard from the sector where the ship was destroyed.
 
@@ -25,26 +26,38 @@ Or you can do it via the NexusMods: [url=https://www.nexusmods.com/x4foundations
 
 [size=130][u]Configuration[/u][/size]
 
-Simply go to the Information window of any of your Shipyards and select the [b]Crew[/b] tab.
-[spoiler][img]https://raw.githubusercontent.com/chemodun/X4-LSRF/refs/heads/main/docs/images/shipyard_information.jpg[/img][/spoiler]
+[size=125][u]Without context menu support[/u][/size]
+[list]
+[*] Simply go to the Information window of any of your Shipyards and select the [b]Crew[/b] tab.
+[/list][spoiler][img]https://raw.githubusercontent.com/chemodun/X4-LSRF/refs/heads/main/docs/images/shipyard_information.jpg[/img][/spoiler]
 [spoiler][img]https://raw.githubusercontent.com/chemodun/X4-LSRF/refs/heads/main/docs/images/shipyard_crew_tab.jpg[/img][/spoiler]
-There you will see the name of Ship Dealer on that Shipyard, and can open the interface by pressing the right mouse button and selecting the option [b]Comm[/b].
-[spoiler][img]https://raw.githubusercontent.com/chemodun/X4-LSRF/refs/heads/main/docs/images/ship_dealer_comm.jpg[/img][/spoiler]
-In the open interface of interactions with NPC, you will see the new button [b]Lost Ship Replacement Filters[/b].
-[spoiler][img]https://raw.githubusercontent.com/chemodun/X4-LSRF/refs/heads/main/docs/images/button_filter.jpg[/img][/spoiler]
-By clicking on it, you will see the updated buttons, with the Shipyard name in the top left (disabled) one and then the buttons for each ship class. If you have more than one Shipyard, the last one, right-down button will show the next Shipyard name and ID.
-[spoiler][img]https://raw.githubusercontent.com/chemodun/X4-LSRF/refs/heads/main/docs/images/lsr_filter_main_interface.jpg[/img][/spoiler]
-By clicking on the ship class button, you will toggle the allowance of the Shipyard to produce ships of that class for Lost Ship Replacement.
-[spoiler][img]https://raw.githubusercontent.com/chemodun/X4-LSRF/refs/heads/main/docs/images/lsrf_disable_one_class.jpg[/img][/spoiler]
-And if you disable all classes for the Shipyard, it will be excluded from the Lost Ship Replacement.
-[spoiler][img]https://raw.githubusercontent.com/chemodun/X4-LSRF/refs/heads/main/docs/images/lsrf_disable_all_classes.jpg[/img][/spoiler]
-If some classes can't be produced by the Shipyard, the button will be disabled. But in the configuration, that class will be allowed to be produced by the Shipyard. And when and if you enable that class, please don't forget to check the Shipyard for the possibility to produce that class.
-[spoiler][img]https://raw.githubusercontent.com/chemodun/X4-LSRF/refs/heads/main/docs/images/lsrf_next_shipyard.jpg[/img][/spoiler]
-
+[list][*] There you will see the name of Ship Trader on that Shipyard, and can open the interface by pressing the right mouse button and selecting the option [b]Comm[/b].
+[/list][spoiler][img]https://raw.githubusercontent.com/chemodun/X4-LSRF/refs/heads/main/docs/images/ship_dealer_comm.jpg[/img][/spoiler]
+[list][*] In the open interface of interactions with NPC, you will see the new button [b]Lost Ship Replacement Filters[/b].
+[/list][spoiler][img]https://raw.githubusercontent.com/chemodun/X4-LSRF/refs/heads/main/docs/images/button_filter.jpg[/img][/spoiler]
+[list][*] Then read the instructions below for the common steps.
+[/list]
+[size=125][u]With context menu support[/u][/size]
+[list]
+[*] If you have installed any kind of the [b]X4 Mod Support APIs[/b], you can access the Lost Ship Replacement Filters via the context menu of the Ship Trader.
+[/list][spoiler][img]https://raw.githubusercontent.com/chemodun/X4-LSRF/refs/heads/main/docs/images/lsr_filter_context_menu.jpg[/img][/spoiler]
+[list][*] Then read the instructions below for the common steps.
+[/list]
+[size=125][u]Common steps[/u][/size]
+[list]
+[*] By clicking on it, you will see the updated buttons, with the Shipyard name in the top left (disabled) one and then the buttons for each ship class. If you have more than one Shipyard, the last one, right-down button will show the next Shipyard name and ID.
+[/list][spoiler][img]https://raw.githubusercontent.com/chemodun/X4-LSRF/refs/heads/main/docs/images/lsr_filter_main_interface.jpg[/img][/spoiler]
+[list][*] By clicking on the ship class button, you will toggle the allowance of the Shipyard to produce ships of that class for Lost Ship Replacement.
+[/list][spoiler][img]https://raw.githubusercontent.com/chemodun/X4-LSRF/refs/heads/main/docs/images/lsrf_disable_one_class.jpg[/img][/spoiler]
+[list][*] And if you disable all classes for the Shipyard, it will be excluded from the Lost Ship Replacement.
+[/list][spoiler][img]https://raw.githubusercontent.com/chemodun/X4-LSRF/refs/heads/main/docs/images/lsrf_disable_all_classes.jpg[/img][/spoiler]
+[list][*] If some classes can't be produced by the Shipyard, the button will be disabled. But in the configuration, that class will be allowed to be produced by the Shipyard. And when and if you enable that class, please don't forget to check the Shipyard for the possibility to produce that class.
+[*] [spoiler][img]https://raw.githubusercontent.com/chemodun/X4-LSRF/refs/heads/main/docs/images/lsrf_next_shipyard.jpg[/img][/spoiler]
+[/list]
 [url=https://www.youtube.com/watch?v=QUbYh6-Nibg]Video version of configuration[/url]
 
 [url=https://www.youtube.com/watch?v=Q2ByOWktxmM]Video demonstration of filtering result[/url]
 
 [size=130][u]Links[/u][/size]
 
-There is a thread on EgoSoft forum - [url=https://forum.egosoft.com/viewtopic.php?t=470010][Mod/MDScript] Lost Ship Replacement Filters[/url]. Feel free to ask any questions or report issues there.
+There is a thread on EgoSoft forum - [[url=https://forum.egosoft.com/viewtopic.php?t=470010]Mod/MDScript] Lost Ship Replacement Filters[/url]. Feel free to ask any questions or report issues there.

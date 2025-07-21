@@ -1,10 +1,19 @@
 [size=140][u]Changelog[/u][/size]
 
-[size=130][u][1.02] - 2025-03-19[/u][/size]
+[size=130][u][1.02] - 2025-07-21[/u][/size]
 
+[size=125][u]Added[/u][/size]
+[list]
+[*] Added context menu support, [b]if[/b] the of any kind of [b]X4 Mod Support APIs[/b] is installed.
+[/list]
+[size=125][u]Improved[/u][/size]
+[list]
+[*] Improved the filtering of Shipyards by simplifying the code and applied diff to the [b]fleet_reconstitution.xml[/b] file.
+[*] Some internal improvements. Get rid of storing configs under the  [b]player.entity[/b].
+[/list]
 [size=125][u]Fixed[/u][/size]
 [list]
-[*] Some internal improvements. Get rid of storing configs under the  [b]player.entity[/b].
+[*] Naming of the Ship Traders in Readme.md
 [/list]
 [size=130][u][1.01] - 2025-03-10[/u][/size]
 
