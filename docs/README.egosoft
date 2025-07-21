@@ -52,8 +52,8 @@ Or you can do it via the NexusMods: [url=https://www.nexusmods.com/x4foundations
 [list][*] And if you disable all classes for the Shipyard, it will be excluded from the Lost Ship Replacement.
 [/list][spoiler][img]https://raw.githubusercontent.com/chemodun/X4-LSRF/refs/heads/main/docs/images/lsrf_disable_all_classes.jpg[/img][/spoiler]
 [list][*] If some classes can't be produced by the Shipyard, the button will be disabled. But in the configuration, that class will be allowed to be produced by the Shipyard. And when and if you enable that class, please don't forget to check the Shipyard for the possibility to produce that class.
-[*] [spoiler][img]https://raw.githubusercontent.com/chemodun/X4-LSRF/refs/heads/main/docs/images/lsrf_next_shipyard.jpg[/img][/spoiler]
-[/list]
+[/list][spoiler][img]https://raw.githubusercontent.com/chemodun/X4-LSRF/refs/heads/main/docs/images/lsrf_next_shipyard.jpg[/img][/spoiler]
+
 [size=130][u]Video[/u][/size]
 
 [url=https://www.youtube.com/watch?v=QUbYh6-Nibg]Video version of configuration[/url]
