@@ -157,39 +157,61 @@
           </actions>
         </cue>
 
-        <library name="FindClosestShipyardsForReconstitution" version="102">
-          <actions>
-            <find_station_by_true_owner groupname="$shipyards" canbuildships="true" faction="$commander.owner"
-              hascontrolentity="controlpost.shiptrader" space="player.galaxy" multiple="true" sortbydistanceto="$commander" />
-            <debug_text text="'LSRF FindClosestShipyardForReconstitution: Shipyards: %s, Commander: %s'.[$shipyards, $commander.debugname]" />
-          </actions>
-        </library>
-
         <library name="PreFilterShipyardForReconstitution" version="102">
           <actions>
-            <debug_text text="'LSRF PreFilterShipyardForReconstitution: Ship Macro: %s, Shipyard: %s'.[$locship.macro, $locshipyard]" />
+            <debug_text text="'LSRF PreFilterShipyardForReconstitution: Ship Class: %s, Shipyard: %s'.[$locclass, $locshipyard]" />
             <set_value name="$shipyardId" exact="$locshipyard.idcode" />
-            <set_value name="$shipClassIndex" exact="md.LSRF_ShipyardsConfigs.Main.$shipClasses.indexof.{$locship.macro.class}" />
+            <set_value name="$shipClassIndex" exact="md.LSRF_ShipyardsConfigs.Main.$shipClasses.indexof.{$locclass}" />
             <include_actions ref="md.LSRF_ShipyardsConfigs.GetShipyardConfig" />
-            <do_if value="@$shipyardConfig.$state.{$shipClassIndex}">
-              <do_if value="$locshipyard.canbuildmacro.{$locship.macro}">
-                <set_value name="$canbuildmacro" exact="true" />
-              </do_if>
-              <do_else>
-                <set_value name="$shipyardfails" exact="true" />
-              </do_else>
-            </do_if>
-            <do_else>
+            <do_if value="@$shipyardConfig.$state.{$shipClassIndex}" negate="true">
               <debug_text
-                text="'LSRF PreFilterShipyardForReconstitution: This ship class %s is disabled on %s.'.[$locship.macro.class, $locshipyard.debugname]" />
-              <set_value name="$shipyardfails" exact="true" />
-            </do_else>
-            <debug_text
-              text="'LSRF PreFilterShipyardForReconstitution: Shipyard: %s, Fails: %s, Can build: %s'.[$locshipyard.debugname, $shipyardfails, $canbuildmacro]" />
+                text="'LSRF PreFilterShipyardForReconstitution: This ship class %s is disabled on %s.'.[$locclass, $locshipyard.debugname]" />
+              <set_value name="$locclass" exact="class.station" />
+            </do_if>
             <remove_value name="$shipyardId" />
           </actions>
         </library>
       </cues>
+    </cue>
+
+    <cue name="AddCommWithShipDealer" instantiate="true">
+      <conditions>
+        <event_cue_signalled cue="@md.Interact_Menu_API.Get_Actions" />
+        <debug_text text="'LSRF: Interact: Object: %s, Param: %s'.[@event.object.debugname, @event.param]" />
+        <check_value value="@event.param.$object != null" />
+        <check_value value="@event.param.$object.trueowner == faction.player" />
+        <debug_text text="'LSRF: Interact: Is Station: %s, Can Build Ships: %s'.[@event.param.$object.isclass.station, @event.param.$object.canbuildships]" />
+        <check_value value="@event.param.$object.isclass.station" />
+        <check_value value="@event.param.$object.canbuildships" />
+      </conditions>
+      <actions>
+        <signal_cue_instantly
+          cue="md.Interact_Menu_API.Add_Action"
+          param="table[
+            $id         = 'shiptrader_comm_lsrf',
+            $section    = 'interaction',
+            $text       = {1972092404,10101},
+            $mouseover  = if @event.param.$object.shiptrader != null then {1972092404,10101} else {1001,11264}.[@event.param.$object.knownname],
+            $callback   = LSRFCommWithShipDealer,
+            $active     = if @event.param.$object.shiptrader != null then true else false,
+            ]" />
+
+      </actions>
+    </cue>
+
+    <cue name="LSRFCommWithShipDealer" instantiate="true">
+      <conditions>
+        <event_cue_signalled />
+        <debug_text text="'LSRF: CommWithShipDealer: Object: %s, Param: %s'.[@event.object.debugname, @event.param]" />
+        <check_value value="@event.param.$object != null" />
+        <check_value value="@event.param.$object.trueowner == faction.player" />
+        <check_value value="@event.param.$object.isclass.station" />
+        <check_value value="@event.param.$object.canbuildships" />
+        <check_value value="@event.param.$object.shiptrader != null" />
+      </conditions>
+      <actions>
+        <start_conversation actor="@event.param.$object.shiptrader" conversation="LSRF_main" type="unqueued" />
+      </actions>
     </cue>
   </cues>
 </mdscript>

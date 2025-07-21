@@ -5,16 +5,17 @@ Filtering can be made by the ship class, i.e. per S, M, L, XL ships.
 
 ## Compatibility
 
-Compatible with `X4: Foundations 7.50`. At least it has been written for feature introduced in this version.
+Compatible with `X4: Foundations 7.50` and upper. At least it has been written for feature introduced in this version.
 
 ## Features
 
-Possibility to configure exclusions of any Shipyards via the interface of any Ship Dealer.
-You can easily select which Shipyards are allowed to produce selected ship classes.
+- Possibility to configure exclusions of any Shipyards via the interface of any Ship Trader.
+- You can easily select which Shipyards are allowed to produce selected ship classes.
+- Support for the context menu, if any kind of the `X4 Mod Support APIs` is installed (Not required, but recommended for better user experience).
 
 ## How it works
 
-After installation, you will see a new button in the Ship Dealer interface.
+After installation, you will see a new button in the Ship Trader interface.
 By clicking on it, you will have the possibility to go through all your shipyards and select which of them are allowed to produce selected ship classes.
 When it is configured and some of your ships are destroyed, the appropriate shipyard will be selected for the Lost Ship Replacement based on the configuration and distance to the shipyard from the sector where the ship was destroyed.
 
@@ -25,21 +26,33 @@ Or you can do it via the NexusMods: [Lost Ship Replacement Filters](https://www.
 
 ## Configuration
 
-Simply go to the Information window of any of your Shipyards and select the `Crew` tab.
+### Without context menu support
+
+- Simply go to the Information window of any of your Shipyards and select the `Crew` tab.
 ![Shipyard Information](docs/images/shipyard_information.jpg)
 ![Shipyard Crew Tab](docs/images/shipyard_crew_tab.jpg)
-There you will see the name of Ship Dealer on that Shipyard, and can open the interface by pressing the right mouse button and selecting the option `Comm`.
-![Ship Dealer Comm Option](docs/images/ship_dealer_comm.jpg)
-In the open interface of interactions with NPC, you will see the new button `Lost Ship Replacement Filters`.
+- There you will see the name of Ship Trader on that Shipyard, and can open the interface by pressing the right mouse button and selecting the option `Comm`.
+![Ship Trader Comm Option](docs/images/ship_dealer_comm.jpg)
+- In the open interface of interactions with NPC, you will see the new button `Lost Ship Replacement Filters`.
 ![Lost Ship Replacement Filter Button](docs/images/button_filter.jpg)
-By clicking on it, you will see the updated buttons, with the Shipyard name in the top left (disabled) one and then the buttons for each ship class. If you have more than one Shipyard, the last one, right-down button will show the next Shipyard name and ID.
+- Then read the instructions below for the common steps.
+
+### With context menu support
+
+- If you have installed any kind of the `X4 Mod Support APIs`, you can access the Lost Ship Replacement Filters via the context menu of the Ship Trader.
+![Context Menu for Lost Ship Replacement Filters](docs/images/lsr_filter_context_menu.jpg)
+- Then read the instructions below for the common steps.
+
+### Common steps
+
+- By clicking on it, you will see the updated buttons, with the Shipyard name in the top left (disabled) one and then the buttons for each ship class. If you have more than one Shipyard, the last one, right-down button will show the next Shipyard name and ID.
 ![Main filter interface](docs/images/lsr_filter_main_interface.jpg)
-By clicking on the ship class button, you will toggle the allowance of the Shipyard to produce ships of that class for Lost Ship Replacement.
+- By clicking on the ship class button, you will toggle the allowance of the Shipyard to produce ships of that class for Lost Ship Replacement.
 ![Disable one class](docs/images/lsrf_disable_one_class.jpg)
-And if you disable all classes for the Shipyard, it will be excluded from the Lost Ship Replacement.
+- And if you disable all classes for the Shipyard, it will be excluded from the Lost Ship Replacement.
 ![Disable all classes](docs/images/lsrf_disable_all_classes.jpg)
-If some classes can't be produced by the Shipyard, the button will be disabled. But in the configuration, that class will be allowed to be produced by the Shipyard. And when and if you enable that class, please don't forget to check the Shipyard for the possibility to produce that class.
-![Next Shipyard](docs/images/lsrf_next_shipyard.jpg)
+- If some classes can't be produced by the Shipyard, the button will be disabled. But in the configuration, that class will be allowed to be produced by the Shipyard. And when and if you enable that class, please don't forget to check the Shipyard for the possibility to produce that class.
+- ![Next Shipyard](docs/images/lsrf_next_shipyard.jpg)
 
 [Video version of configuration](https://www.youtube.com/watch?v=QUbYh6-Nibg)
 
