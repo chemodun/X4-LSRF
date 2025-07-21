@@ -52,7 +52,7 @@ Or you can do it via the NexusMods: [Lost Ship Replacement Filters](https://www.
 - And if you disable all classes for the Shipyard, it will be excluded from the Lost Ship Replacement.
 ![Disable all classes](docs/images/lsrf_disable_all_classes.jpg)
 - If some classes can't be produced by the Shipyard, the button will be disabled. But in the configuration, that class will be allowed to be produced by the Shipyard. And when and if you enable that class, please don't forget to check the Shipyard for the possibility to produce that class.
-- ![Next Shipyard](docs/images/lsrf_next_shipyard.jpg)
+![Next Shipyard](docs/images/lsrf_next_shipyard.jpg)
 
 ## Video
 
