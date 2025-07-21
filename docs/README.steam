@@ -54,8 +54,13 @@ Or you can do it via the NexusMods: [url=https://www.nexusmods.com/x4foundations
 [list][*] If some classes can't be produced by the Shipyard, the button will be disabled. But in the configuration, that class will be allowed to be produced by the Shipyard. And when and if you enable that class, please don't forget to check the Shipyard for the possibility to produce that class.
 [*] [img]https://raw.githubusercontent.com/chemodun/X4-LSRF/refs/heads/main/docs/images/lsrf_next_shipyard.jpg[/img]
 [/list]
+[h2][b]Video[/b][/h2]
+
 Video version of configuration
 [previewyoutube=QUbYh6-Nibg;full][/previewyoutube]
+
+Video demonstration of the context menu support
+[previewyoutube=pzXZ8Slo2xg;full][/previewyoutube]
 
 Video demonstration of filtering result
 [previewyoutube=Q2ByOWktxmM;full][/previewyoutube]
