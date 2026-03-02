@@ -57,7 +57,7 @@
               <find_station_by_true_owner name="$shipyards" canbuildships="true" faction="faction.player"
                 hascontrolentity="controlpost.shiptrader" space="player.galaxy" multiple="true" sortbydistanceto="$shipyardPrimary" />
               <set_value name="$shipyardIndex" exact="0" />
-              <do_if value="@$shipyards and @$shipyards.count > 0">
+              <do_if value="@$shipyards and @$shipyards.count gt 0">
                 <set_value name="$shipyardIndex" exact="$shipyards.indexof.{$shipyardCurrent}" />
               </do_if>
               <debug_text
@@ -77,7 +77,7 @@
                 <remove_value name="$position" />
                 <remove_value name="$shipyardId" />
               </do_for_each>
-              <do_if value="$shipyardIndex > 0 and $shipyardIndex le @$shipyards.count">
+              <do_if value="$shipyardIndex gt 0 and $shipyardIndex le @$shipyards.count">
                 <set_value name="$shipyardIndex" operation="add" />
                 <do_if value="$shipyardIndex gt @$shipyards.count">
                   <set_value name="$shipyardIndex" exact="1" />
